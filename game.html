@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Right Door Trap 2</title>
+    <style>
+        canvas {
+            background-color: rgba(0,0,0,0.8);
+        }
+    </style>
+
+    <script>
+        let KEY_SPACE = false; // 32
+        let KEY_UP = false; // 38
+        let KEY_DOWN = false; // 40
+let canvas;
+    let ctx;
+      let backgroundImage = new Image();  
+        let pistol = {
+            x: 50,
+            y: 200,
+            width: 100,
+            height: 60,
+            src: 'img/Pistol.png'
+        };
+
+        let doors = [];
+
+document.onkeydown = function(e) {
+    console.log(e.KeyCode);
+    if (e.keyCode == 32) { // Leertaste gedrückt 
+        KEY_SPACE = true;
+    }
+
+
+
+
+    if (e.keyCode == 38) { // Nach oben gedrückt 
+        KEY_UP = true;
+    }
+
+
+
+
+    if (e.keyCode == 40) { // Nach unten gedrückt 
+        KEY_DOWN = true;
+    }
+}
+
+
+
+
+
+
+
+document.onkeyup = function(e) {
+    if (e.keyCode == 32) { // Leertaste losgelassen
+        KEY_SPACE = false;
+    }
+
+
+    if (e.keyCode == 38) { // Nach oben losgelassen
+        KEY_UP = false;
+    }
+
+
+
+
+    if (e.keyCode == 40) { // Nach unten losgelasssen
+        KEY_DOWN = false;
+    }
+
+}
+
+function startGame(){
+ canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    loadImages();
+   setInterval(update, 1000 / 25);
+    setInterval(createDoors, 5000);
+setInterval(checkForCollision, 1000 / 25);
+
+
+   draw();
+// calculate
+}
+
+function checkForCollision(){
+    doors.forEach(function(door){
+if (pistol.x + pistol.width > door.x 
+&& pistol.y + pistol.height > door.y
+&& pistol.x < door.x
+&& pistol.y < door.y
+) {
+    pistol.img.src ='img/boom.png';
+    console.log('Collision!!!!');
+    doors = doors.filter(u => u != door);
+}
+
+    });
+}
+
+function createDoors(){
+ let door = {
+  x: 800,
+  y: Math.random() * 500,
+ width: 100,
+height: 40,
+src: 'img/tür.png',
+img: new Image()
+};
+    door.img.src = door.src;
+doors.push(door);
+}
+
+function update(){
+if(KEY_UP) {
+    pistol.y -= 6;
+}
+
+if(KEY_DOWN) {
+    pistol.y += 6;
+}
+
+doors.forEach(function(door){
+door.x -= 7;
+});
+}
+
+
+function loadImages(){
+backgroundImage.src = 'img/backgrojnd.jpg';
+pistol.img = new Image();
+pistol.img.src = pistol.src;
+
+
+}
+
+function draw(){
+ ctx.drawImage(backgroundImage, 0, 0);
+ ctx.drawImage(pistol.img, pistol.x, pistol.y, pistol.width, pistol.height);
+
+ doors.forEach(function(door) {
+    ctx.drawImage(door.img, door.x, door.y, door.width, door.height);
+ });
+    
+    requestAnimationFrame(draw);
+}
+
+</script>
+</head>
+<body onload="startGame()">
+  <canvas id="canvas" width="600" height="315"></canvas>  
+</body>
+</html>
