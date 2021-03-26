@@ -104,7 +104,7 @@ if (pistol.x + pistol.width > door.x
 
 function createDoors(){
  let door = {
-  x: 600,
+  x: 800,
   y: Math.random() * 500,
  width: 100,
 height: 40,
@@ -125,7 +125,7 @@ if(KEY_DOWN) {
 }
 
 doors.forEach(function(door){
-door.x -= 7;
+door.x -= 9;
 });
 }
 
