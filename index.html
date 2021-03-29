@@ -27,6 +27,7 @@ let canvas;
         };
 
         let doors = [];
+          let shots = [];
 
 document.onkeydown = function(e) {
     console.log(e.KeyCode);
@@ -81,7 +82,7 @@ function startGame(){
    setInterval(update, 1000 / 25);
     setInterval(createDoors, 3000);
 setInterval(checkForCollision, 1000 / 25);
-
+setInterval(checkForShoot, 1000 / 10);
 
    draw();
 // calculate
@@ -99,8 +100,26 @@ if (pistol.x + pistol.width > door.x
     doors = doors.filter(u => u != door);
 }
 
-    });
-}
+         shots.forEach(function(shot) {
+                    // Kontrollieren, ob Laser mit Rakete kollidiert
+                    if (shot.x + shot.width > door.x &&
+                        shot.y + shot.height > door.y &&
+                        shot.x < door.x &&
+                        shot.y < door.y + door.height
+                    ) {
+                        door.hit = true;
+                        door.img.src = 'img/boom.png';
+                        door.log('Collion!!!');
+
+                        setTimeout(() => {
+                            doors = doors.filter(u => u != door);
+                        }, 2000);
+                    }
+
+                });
+
+            });
+        }
 
 function createDoors(){
  let door = {
@@ -114,6 +133,21 @@ img: new Image()
     door.img.src = door.src;
 doors.push(door);
 }
+         function checkForShoot() {
+            if (KEY_SPACE) {
+                let shot = {
+                    x: pistol.x + 110,
+                    y: pistol.y + 22,
+                    width: 20,
+                    height: 4,
+                    src: 'img/shot.png',
+                    img: new Image()
+                };
+                shot.img.src = shot.src;
+
+                shots.push(shot);
+            }
+        }
 
 function update(){
 if(KEY_UP) {
@@ -145,6 +179,10 @@ function draw(){
  doors.forEach(function(door) {
     ctx.drawImage(door.img, door.x, door.y, door.width, door.height);
  });
+    
+     shots.forEach(function(shot) {
+                ctx.drawImage(shot.img, shot.x, shot.y, shot.width, shot.height);
+            });
     
     requestAnimationFrame(draw);
 }
